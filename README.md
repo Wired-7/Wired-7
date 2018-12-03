@@ -1,3 +1,14 @@
+Wired-7 - A fork of Lainchan
+========================================================
+Wired-7 es un fork de [Lainchan](https://github.com/lainchan/lainchan).
+
+Wired-7 es una imageboard anónima en español con un desarrollo activo. Wired-7 arregla muchos de los errores de Lainchan, mejora aspectos de usabilidad y añade funcionalidades mas potentes.
+
+Puedes ver la versión original en [Wired-7.org](https://wired-7.org/). Este repositorio esta sin configurar, por lo que cuando ejecutes el script por primera vez se vera muy diferente.
+
+Por favor, antes de usar cualquier parte del código, es importante que leas las [licencias](https://github.com/Wired-7/Wired-7/blob/master/LICENSE.md)
+
+
 Lainchan - A fork of vichan
 ========================================================
 
