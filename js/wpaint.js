@@ -25,8 +25,8 @@ window.oekaki = (function(){
 var oekaki = {};
 
 oekaki.settings = new script_settings('wpaint');
-oekaki.height = oekaki.settings.get("height", 250);
-oekaki.width = oekaki.settings.get("width", 500);
+oekaki.height = oekaki.settings.get("height", 720);
+oekaki.width = oekaki.settings.get("width", 1280);
 
 function dataURItoBlob(dataURI) {
     var binary = atob(dataURI.split(',')[1]);
@@ -105,13 +105,16 @@ oekaki.init = function() {
 };
 
 oekaki.load_img = function() {
-  alert(_("Click on any image on this site to load it into oekaki applet"));
+  alert(_("Clicka en una imagen de la pagina para cargarla en el lienzo (Si no quieres la miniatura, abre la imagen)"));
   $('img').one('click.loadimg', function(e) {
     $('img').off('click.loadimg');
+	oekaki.height = $('img').height();
+	oekaki.width = $('img').width();
     e.stopImmediatePropagation();
     e.preventDefault();
     var url = $(this).prop('src');
     $('#wpaintdiv').wPaint('setBg', url);
+	
     return false;
   });
 };

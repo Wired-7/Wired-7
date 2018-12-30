@@ -2,11 +2,14 @@ if (active_page == 'index' || active_page == 'thread')
 $(function(){
 
   var gallery_view = false;
+  
+  var var_slide_mode = false;
 
-  $('hr:first').before('<div id="gallery-view" style="text-align:right"><a class="unimportant" href="javascript:void(0)">-</a></div>');
-  $('#gallery-view a').html(gallery_view ? _("Disable gallery mode") : _("Enable gallery mode")).click(function() {
+  $('.bar.top').append('<span id="gallery-view" style="margin-right: 10px;float: right;"><a class="fa fa-picture-o" title="Modo galería (Hay que activar y clickar en una imagen)" href="javascript:void(0)"></a></span>');
+  $('#gallery-view a').click(function() {
     gallery_view = !gallery_view;
-    $(this).html(gallery_view ? _("Disable gallery mode") : _("Enable gallery mode"));
+	if (gallery_view) $(this).css('color', 'lime');
+	else $(this).css('color', '');
     toggle_gview(document);
   });
 
@@ -69,8 +72,10 @@ $(function(){
       });
     });
 
-    $("<a href='javascript:void(0)'><i class='fa fa-times'></i></div>")
-    .click(close_gallery).appendTo(toolbar);
+	$("<input id='slide_miliseconds' title='Tiempo entre imagenes (en milisegundos)' style='margin-right:10px' type='number' min='1000' value='4000'>").appendTo(toolbar);
+	$("<a href='javascript:void(0)'><i class='fa fa-play' title='Modo manos libres'></i></div>").click(slide_mode).appendTo(toolbar);
+    $("<a href='javascript:void(0)'><i class='fa fa-times'></i></div>").click(close_gallery).appendTo(toolbar);
+
 
     $('body').on('keydown.gview', function(e) {
       if (e.which == 39 || e.which == 40) { // right or down arrow
@@ -153,6 +158,8 @@ $(function(){
   };
 
   var close_gallery = function() {
+	var_slide_mode = false;
+	
     $('body').css('overflow', 'auto');
 
     gallery_opened = false;
@@ -161,5 +168,35 @@ $(function(){
 
     handler.fadeOut(400, function() { handler.remove(); });
   };
-
+  
+  
+  var slide_mode = function(){
+	var slide_miliseconds = document.getElementById('slide_miliseconds').value;
+	if (!var_slide_mode){
+		if (slide_miliseconds < 1000){
+			alert("Para evitar que tu navegador se ralentice, el tiempo minimo entre diapositivas es 1000ms (1s)");
+			return;
+		}
+		$('#gallery_toolbar .fa.fa-play').attr('class','fa fa-pause');
+		$('#slide_miliseconds').css("display","none");
+	    var_slide_mode = true;
+	}else{
+		$('#gallery_toolbar .fa.fa-pause').attr('class','fa fa-play');
+		$('#slide_miliseconds').css("display","initial");
+		var_slide_mode = false;
+		return;
+	}
+	
+	slices_interval = setInterval(function(){
+	  if(!var_slide_mode) {
+		$('#gallery_toolbar .fa.fa-pause').attr('class','fa fa-play');
+		$('#slide_miliseconds').css("display","initial");
+		var_slide_mode = false;
+		clearInterval(slices_interval);
+		return;
+      }else{
+		gallery_setimage(1);
+	  }
+	}, slide_miliseconds); 
+  }
 });

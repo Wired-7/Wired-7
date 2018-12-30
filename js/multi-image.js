@@ -10,14 +10,14 @@
  */
 
 function multi_image() {
-    $('input[type=file]').after('<a href="#" class="add_image">+</a>');
+    $('input[type=file]').after('<a href="#" class="add_image" style="font-family: Header;font-size: 14px;margin-left: 15px;">+</a>');
     
     $(document).on('click', 'a.add_image', function(e) {
         e.preventDefault();
 
         var images_len = $('form:not([id="quick-reply"]) [type=file]').length;
         
-        if (!(images_len >= max_images)) {
+		for(;images_len < max_images;images_len++){
             var new_file = '<br class="file_separator"/><input type="file" name="file'+(images_len+1)+'" id="upload_file'+(images_len+1)+'">';
 
             $('[type=file]:last').after(new_file);

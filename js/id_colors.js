@@ -1,6 +1,6 @@
 if (active_page == 'thread' || active_page == 'index') {
 	$(document).ready(function(){
-		if (window.Options && Options.get_tab('general')) {
+		if (false) {
 			var selector = '#color-ids>input';
 			var e = 'change';
 			Options.extend_tab("general", "<label id='color-ids'><input type='checkbox' /> "+_('Color IDs')+"</label>");

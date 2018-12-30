@@ -21,25 +21,31 @@
 *   $config['additional_javascript'][] = 'js/youtube.js';
 *
 */
-
-
 onready(function(){
 	var do_embed_yt = function(tag) {
 		$('div.video-container a', tag).click(function() {
 			var videoID = $(this.parentNode).data('video');
 		
 			$(this.parentNode).html('<iframe style="float:left;margin: 10px 20px" type="text/html" '+
-				'width="360" height="270" src="//www.youtube.com/embed/' + videoID +
+				'width="520" height="295" src="//www.youtube.com/embed/' + videoID +
 				'?autoplay=1&html5=1" allowfullscreen frameborder="0"/>');
-
+	
 			return false;
 		});
 	};
 	do_embed_yt(document);
-
+	
         // allow to work with auto-reload.js, etc.
         $(document).on('new_post', function(e, post) {
                 do_embed_yt(post);
         });
+		
+	$('.video-container').each(function(){
+	var videoID = $(this).data('video');
+	$.getJSON('https://www.googleapis.com/youtube/v3/videos?id=' + videoID + '&key=AIzaSyC3A4aW3a_SvlGtnnxn33JoifuFZ1kW_to&part=snippet', function (data) {
+		$('.video-container[data-video=' + videoID + ']').append("<span style='color: mediumturquoise;font-size: 14px;'><i class='fa fa-play-circle'></i>" + data.items[0].snippet.title + "</span>");
+	});
+});
+	
 });
 

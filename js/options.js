@@ -103,14 +103,16 @@ options_tablist = $("<div id='options_tablist'></div>").appendTo(options_div);
 
 
 $(function(){
-  options_button = $("<a href='javascript:void(0)' title='"+_("Options")+"'>["+_("Options")+"]</a>");
+  options_button = $("<a href='javascript:void(0)' title='"+_("Options")+"' style='"+_("margin-right: 10px;")+"'>["+_("Options")+"]</a>");
 
   if ($(".boardlist.compact-boardlist").length) {
     options_button.addClass("cb-item cb-fa").html("<i class='fa fa-gear'></i>");
   }
 
   if ($(".boardlist:first").length) {
-    options_button.css('float', 'right').appendTo($(".boardlist:first"));
+    options_button.css('float', 'right').appendTo($(".bar.top"));
+	options_button.css('margin-right', '10px');
+	options_button.addClass("cb-item cb-fa").html("<i class='fa fa-gear'></i>");
   }
   else {
     var optsdiv = $('<div style="text-align: right"></div>');

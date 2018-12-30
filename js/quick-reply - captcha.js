@@ -4,7 +4,7 @@
  *
  * Released under the MIT license
  * Copyright (c) 2013 Michael Save <savetheinternet@tinyboard.org>
- * Copyright (c) 2013-2014 Marcin Łabanowski <marcin@6irc.net>
+ * Copyright (c) 2013-2014 Marcin Åabanowski <marcin@6irc.net>
  *
  * Usage:
  *   $config['additional_javascript'][] = 'js/jquery.min.js';
@@ -14,8 +14,6 @@
  */
 
 (function() {
-
-		
 	var settings = new script_settings('quick-reply');
 	
 	var do_css = function() {
@@ -51,7 +49,7 @@
 		}\
 		#quick-reply tr td:nth-child(2) {\
 			white-space: nowrap;\
-			text-align: right;\
+			text-align: center;\
 			padding-right: 4px;\
 		}\
 		#quick-reply tr td:nth-child(2) input[type="submit"] {\
@@ -168,50 +166,6 @@
 					$('<td class="submit"></td>').append($td.find('input[type="submit"]')).insertAfter($td);
 				}
 	
-				// reCAPTCHA
-				if ($td.find('#recaptcha_widget_div').length) {
-					// Just show the image, and have it interact with the real form.
-					var $captchaimg = $td.find('#recaptcha_image img');
-					
-					$captchaimg
-						.removeAttr('id')
-						.removeAttr('style')
-						.addClass('recaptcha_image')
-						.click(function() {
-							$('#recaptcha_reload').click();
-						});
-					
-					// When we get a new captcha...
-					$('#recaptcha_response_field').focus(function() {
-						if ($captchaimg.attr('src') != $('#recaptcha_image img').attr('src')) {
-							$captchaimg.attr('src', $('#recaptcha_image img').attr('src'));
-							$postForm.find('input[name="recaptcha_challenge_field"]').val($('#recaptcha_challenge_field').val());
-							$postForm.find('input[name="recaptcha_response_field"]').val('').focus();
-						}
-					});
-					
-					$postForm.submit(function() {
-						setTimeout(function() {
-							$('#recaptcha_reload').click();
-						}, 200);
-					});
-					
-					// Make a new row for the response text
-					var $newRow = $('<tr><td class="recaptcha-response" colspan="2"></td></tr>');
-					$newRow.children().first().append(
-						$td.find('input').removeAttr('style')
-					);
-					$newRow.find('#recaptcha_response_field')
-						.removeAttr('id')
-						.addClass('recaptcha_response_field')
-						.attr('placeholder', $('#recaptcha_response_field').attr('placeholder'));
-					
-					$('#recaptcha_response_field').addClass('recaptcha_response_field')
-					
-					$td.replaceWith($('<td class="recaptcha" colspan="2"></td>').append($('<span></span>').append($captchaimg)));
-					
-					$newRow.insertAfter(this);
-				}
 	
 				// Upload section
 				if ($td.find('input[type="file"]').length) {
@@ -222,7 +176,7 @@
 							// Make a new row for it
 							var $newRow = $('<tr><td colspan="2"></td></tr>');
 						
-							$file_url.clone().attr('placeholder', _('Desde URL:')).appendTo($newRow.find('td'));
+							$file_url.clone().attr('placeholder', _('Upload URL')).appendTo($newRow.find('td'));
 						
 							$newRow.insertBefore(this);
 						}
@@ -265,7 +219,7 @@
 							$(this).attr('id', 'q-spoiler-image');
 							$postForm.find('input[type="file"]').parent()
 								.removeAttr('colspan')
-								.after($('<td class="spoiler"></td>').append(this, ' ', $('<label for="q-spoiler-image">').text(_('¿Spoiler?'))));
+								.after($('<td class="spoiler"></td>').append(this, ' ', $('<label for="q-spoiler-image">').text(_('Spoiler Image'))));
 						} else if ($(this).attr('name') == 'no_country') {
 							$td.find('label,input[type="checkbox"]').remove();
 						} else {
@@ -273,6 +227,7 @@
 						}
 					});
 				}
+				
 				
 				$td.find('small').hide();
 			}
@@ -286,7 +241,7 @@
 		$postForm.find('table').prepend('<tr><th colspan="2">\
 			<span class="handle">\
 				<a class="close-btn" href="javascript:void(0)">×</a>\
-				' + _('Respuesta rápida') + '\
+				' + _('Quick Reply') + '\
 			</span>\
 			</th></tr>');
 		
@@ -360,8 +315,6 @@
 		
 		$(window).trigger('quick-reply');
 	
-	
-		
 		$(window).ready(function() {
 			if (settings.get('hide_at_top', true)) {
 				$(window).scroll(function() {
@@ -385,19 +338,11 @@
 		});
 	};
 	
-	if (active_page == 'thread')onready(function(){
-		$('.bar.top').append('<span id="quick-reply-icon" style="margin-right: 10px;float: right;"><a class="fa fa-comment" title="Respuesta rápida" href="javascript:void(0)"></a></span>');
-		$('#quick-reply-icon a').click(function() {
-			show_quick_reply();
-		});
-	});
-		
-	
-	
 	$(window).on('cite', function(e, id, with_link) {
 		if ($(this).width() <= 400)
 			return;
 		show_quick_reply();
+		
 		if (with_link) {
 			$(document).ready(function() {
 				if ($('#' + id).length) {
@@ -412,15 +357,27 @@
 					$('#quick-reply textarea[name="body"]').val('').focus().val(tmp);
 				}, 1);
 			});
+		}else{
+			//If cite is clicked and page is alredy loaded: Remove reCaptcha and change to Only-Write Mode
+			$('#quick-reply .g-recaptcha').remove();
+			$('#quick-reply .banner').css('background-color', '#FBB');
+			$('#quick-reply .banner').html('Posting mode: Only Write <a class="unimportant" href="../">[Return]</a>');
+			$('#quick-reply .submit input').remove();
+			$('#quick-reply .submit').append('<a href="#"><input type="button" style="margin-left:2px;" value="Go Top"></a>');
 		}
 	});
 	
 	var floating_link = function() {
 		if (!settings.get('floating_link', false))
 			return;
-		$('<a href="javascript:void(0)" class="quick-reply-btn">'+_('Respuesta rápida')+'</a>')
+		$('<a href="javascript:void(0)" class="quick-reply-btn">'+_('Quick Reply')+'</a>')
 			.click(function() {
 				show_quick_reply();
+				$('#quick-reply .g-recaptcha').remove();
+				$('#quick-reply .banner').css('background-color', '#FBB');
+				$('#quick-reply .banner').html('Posting mode: Only Write <a class="unimportant" href="../">[Return]</a>');
+				$('#quick-reply .submit input').remove();
+				$('#quick-reply .submit').append('<a href="#"><input type="button" style="margin-left:2px;" value="Go Top"></a>');
 				$(this).remove();
 			}).appendTo($('body'));
 		
@@ -428,8 +385,6 @@
 			$('.quick-reply-btn').remove();
 		});
 	};
-	
-	
 	
 	if (settings.get('floating_link', false)) {
 		$(window).ready(function() {

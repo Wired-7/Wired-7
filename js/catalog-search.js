@@ -15,7 +15,7 @@
 var catalogSearch = function() {
 	var $controls = $('.controls'),
 		$threads = $('.threads .thread'),
-		$searchLabel = $('<label for="catalog_search">Search: </label>'),
+		$searchLabel = $('<div class="padder" style="height: 2vh;"></div> <label for="catalog_search">Search: </label>'),
 		$searchBox = $('<input id="catalog_search" type="text" placeholder="Search" />');
 		function searchToggle() {
 			var button = $('#catalog_search_button');

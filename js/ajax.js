@@ -94,7 +94,7 @@ $(window).ready(function() {
 									
 									highlightReply(post_response.id);
 									window.location.hash = post_response.id;
-									$(window).scrollTop($(document).height());
+									$(window).scrollTop($('div.post#reply_' + post_response.id).offset().top);
 									
 									$(form).find('input[type="submit"]').val(submit_txt);
 									$(form).find('input[type="submit"]').removeAttr('disabled');
@@ -108,6 +108,15 @@ $(window).ready(function() {
 						}
 						$(form).find('input[type="submit"]').val(_('Posted...'));
 						$(document).trigger("ajax_after_post", post_response);
+						// Get the current page
+						var curr_page = window.location.href;
+						//curr_page = curr_page.replace('.html','#');
+						var next_page = curr_page+'#'+post_response.id;
+						// Change link to new page
+						window.location = next_page;
+						// Refresh page
+						window.location.reload();
+						
 					} else {
 						alert(_('An unknown error occured when posting!'));
 						$(form).find('input[type="submit"]').val(submit_txt);

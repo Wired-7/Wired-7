@@ -14,7 +14,11 @@ function setupVideo(thumb, url) {
     var expanded = false;
     var hovering = false;
     var loop = true;
-    var loopControls = [document.createElement("span"), document.createElement("span")];
+    var loopControls = [document.createElement("a"), document.createElement("a")];
+    loopControls[0].style.color = "#ACCCCC";
+    loopControls[1].style.color = "#ACCCCC";
+    loopControls[0].href = "javascript:;";
+    loopControls[1].href = "javascript:;";
     var fileInfo = thumb.parentNode.querySelector(".fileinfo");
     var mouseDown = false;
 
@@ -47,18 +51,18 @@ function setupVideo(thumb, url) {
             video.loop = loop;
             video.innerText = _("Your browser does not support HTML5 video.");
 
-            videoHide = document.createElement("img");
-            videoHide.src = configRoot + "static/collapse.gif";
-            videoHide.alt = "[ - ]";
-            videoHide.title = "Collapse video";
-            videoHide.style.marginLeft = "-15px";
-            videoHide.style.cssFloat = "left";
+            videoHide = document.createElement("a");
+            videoHide.textContent = "[Cerrar]";
+			videoHide.style.color = "#7193e0";
+			videoHide.href = "javascript:;";
             videoHide.addEventListener("click", unexpand, false);
 
+	
             videoContainer = document.createElement("div");
             videoContainer.style.paddingLeft = "15px";
             videoContainer.style.display = "none";
-            videoContainer.appendChild(videoHide);
+			fileInfo.appendChild(document.createTextNode(" "));
+            fileInfo.appendChild(videoHide);
             videoContainer.appendChild(video);
             thumb.parentNode.insertBefore(videoContainer, thumb.nextSibling);
 

@@ -18,35 +18,32 @@
 
 if (active_page == 'ukko' || active_page == 'thread' || active_page == 'index')
 onready(function(){
-	$('hr:first').before('<div id="expand-all-images" style="text-align:right"><a class="unimportant" href="javascript:void(0)"></a></div>');
-	$('div#expand-all-images a')
-		.text(_('Expand all images'))
+	$('.bar.top').append('<span id="expand-all-images" style="margin-right: 10px;float: right;"><a class="fa fa-expand" title="Expandir todas las imágenes" href="javascript:void(0)"></a></span>');
+	$('span#expand-all-images a')
 		.click(function() {
-			$('a img.post-image').each(function() {
-				// Don't expand YouTube embeds
-				if ($(this).parent().parent().hasClass('video-container'))
-					return;
+			if ($('span#expand-all-images a').attr('class') == 'fa fa-expand'){
+				$('a img.post-image').each(function() {
+					// Don't expand YouTube embeds
+					if ($(this).parent().parent().hasClass('video-container'))
+						return;
 
-				// or WEBM
-				if (/^\/player\.php\?/.test($(this).parent().attr('href')))
-					return;
+					// or WEBM
+					if (/^\/player\.php\?/.test($(this).parent().attr('href')))
+						return;
 
-				if (!$(this).parent().data('expanded'))
-					$(this).parent().click();
-			});
-
-			if (!$('#shrink-all-images').length) {
-				$('hr:first').before('<div id="shrink-all-images" style="text-align:right"><a class="unimportant" href="javascript:void(0)"></a></div>');
-			}
-
-			$('div#shrink-all-images a')
-				.text(_('Shrink all images'))
-				.click(function(){
-					$('a img.full-image').each(function() {
-						if ($(this).parent().data('expanded'))
-							$(this).parent().click();
-					});
-					$(this).parent().remove();
+					if (!$(this).parent().data('expanded'))
+						$(this).parent().click();
+					
+					$('span#expand-all-images a').attr('class','fa fa-compress');
+					$('span#expand-all-images a').attr('title','Encoger las imágenes');
 				});
+			}else{
+				$('a img.full-image').each(function() {
+					if ($(this).parent().data('expanded'))
+						$(this).parent().click();
+				});
+				$('span#expand-all-images a').attr('class','fa fa-expand');
+				$('span#expand-all-images a').attr('title','Expandir todas las imágenes');
+			}
 		});
 });

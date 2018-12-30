@@ -15,7 +15,7 @@
  *
  */
 
-if (active_page == 'ukko' || active_page == 'thread' || active_page == 'index' || (window.Options && Options.get_tab('general')))
+if (active_page == 'ukko' || active_page == 'thread' || active_page == 'index' || (window.Options && Options.get_tab('general')) || active_page == 'mod?')
 $(document).ready(function() {
 	var force_anon = function() {
 		if ($(this).children('a.capcode').length == 0) {

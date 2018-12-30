@@ -33,7 +33,7 @@ var update_own = function() {
 
   if (posts[board] && posts[board].indexOf(id) !== -1) { // Own post!
     $(this).addClass('you');
-    $(this).find('span.name').first().append(' <span class="own_post">'+_('(You)')+'</span>');
+    $(this).find('span.identificador').first().append(' <span class="own_post">'+_('(You)')+'</span> <span style="padding-left: 1px"></span>');
   }
 
   // Update references
@@ -46,7 +46,7 @@ var update_own = function() {
       return;
 
     if (posts[board] && posts[board].indexOf(postID) !== -1) {
-      $(this).after(' <small>'+_('(You)')+'</small>');
+      $(this).after(' <small>'+_('(You)')+'</small> <span style="padding-left: 1px"></span>');
     }
   });
 };

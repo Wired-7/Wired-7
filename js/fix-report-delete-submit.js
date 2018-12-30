@@ -56,6 +56,16 @@ Menu.onclick(function(e, $buf) {
 	});
 });
 
+/*
+var imgMenu = Menu.add_submenu("image_search_menu", "Image search");
+var imgMenuImgOps = imgMenu.add_item("image_search_menu_ImgOps", "ImgOps");
+imgMenu.add_item("image_search_menu_Google", "Google");
+imgMenu.add_item("image_search_menu_idqb", "iqdb");
+imgMenuImgOps.onclick(function() {
+	alert("Hello! I am an alert box!!");
+});
+*/
+
 $(document).on('new_post', function(){
 	$('input.delete').hide();
 });

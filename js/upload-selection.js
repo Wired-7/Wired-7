@@ -52,7 +52,7 @@ $(function(){
     $("#upload").show();
     $("#upload_url").show();
 
-    $('label[for="file_url"]').html(_("URL"));
+    $('label[for="file_url"]').html(_("Imagen URL"));
   };
 
   enable_embed = function() {
@@ -68,15 +68,15 @@ $(function(){
 
   if (enabled_url || enabled_embed || enabled_oekaki) {
     $("<tr><th>"+_("Select")+"</th><td id='upload_selection'></td></tr>").insertBefore("#upload");
-    var my_html = "<a href='javascript:void(0)' onclick='enable_file(); return false;'>"+_("File")+"</a>";
+    var my_html = "<a href='javascript:void(0)' onclick='enable_file(); return false;'>"+_("Archivo")+"</a>";
     if (enabled_url) {
-      my_html += " / <a href='javascript:void(0)' onclick='enable_url(); return false;'>"+_("Remote")+"</a>";
+      my_html += " / <a href='javascript:void(0)' onclick='enable_url(); return false;'>"+_("Link Imagen")+"</a>";
     }
     if (enabled_embed) {
-      my_html += " / <a href='javascript:void(0)' onclick='enable_embed(); return false;'>"+_("Embed")+"</a>";
+      my_html += " / <a href='javascript:void(0)' onclick='enable_embed(); return false;'>"+_("Link Video")+"</a>";
     }
     if (enabled_oekaki) {
-      my_html += " / <a href='javascript:void(0)' onclick='enable_oekaki(); return false;'>"+_("Oekaki")+"</a>";
+      my_html += " / <a href='javascript:void(0)' onclick='enable_oekaki(); return false;'>"+_("wPaint")+"</a>";
 
       $("#confirm_oekaki_label").hide();
     }

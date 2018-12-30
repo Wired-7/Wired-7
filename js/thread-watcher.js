@@ -28,10 +28,10 @@ watchlist.render = function(reset) {
 	JSON.parse(localStorage.watchlist).forEach(function(e, i) {
 		//look at line 69, that's what (e) is here.
 		threads.push('<div class="watchlist-inner" id="watchlist-'+i+'">' +
-		'<span>/'+e[0]+'/ - ' +
+		'<span style="color:white;font-size: 12pt;">/'+e[0]+'/ - ' +
 		'<a href="'+e[3]+'">'+e[1].replace("thread_", _("Thread #"))+'</a>' +
 		' ('+e[2]+') </span>' +
-		'<a class="watchlist-remove">X</a>'+
+		'<a style="color:red;font-size: 11pt;"class="watchlist-remove">  X</a>'+
 	'</div>');
 	});
 	if ($('#watchlist').length) {
@@ -44,8 +44,8 @@ watchlist.render = function(reset) {
 		$((active_page == 'ukko') ? 'hr:first' : (active_page == 'catalog') ? 'body>span:first' : 'form[name="post"]').before(
 			$('<div id="watchlist">'+
 					'<div class="watchlist-controls">'+
-						'<span><a id="clearList">['+_('Clear List')+']</a></span>&nbsp'+
-						'<span><a id="clearGhosts">['+_('Clear Ghosts')+']</a></span>'+
+						'<span style="font-size: 12pt;"><a id="clearList">['+_('Clear List')+']</a></span>&nbsp'+
+						'<span style="font-size: 12pt;"><a id="clearGhosts">['+_('Clear Ghosts')+']</a></span>'+
 					'</div>'+
 					threads.join('')+
 				'</div>').css("background-color", menuStyle.backgroundColor).css("border", menuStyle.borderBottomWidth+" "+menuStyle.borderBottomStyle+" "+menuStyle.borderBottomColor));
@@ -149,10 +149,10 @@ $(document).ready(function(){
 	}
 
 	//Append the watchlist toggle button.
-	$('.boardlist').append('<span>[ <a class="watchlist-toggle" href="#">'+_('watchlist')+'</a> ]</span>');
-	$('.compact-boardlist').append('<span>[ <a class="watchlist-toggle" href="#">'+_('watchlist')+'</a> ]</span>');
+	$('.boardlist').append('<span>[ <a class="watchlist-toggle" href="#">'+_('marcadores')+'</a> ]</span>');
+	$('.compact-boardlist').append('<span>[ <a class="watchlist-toggle" href="#">'+_('marcadores')+'</a> ]</span>');
 	//Append a watch thread button after every OP.
-	$('.op>.intro').append('<a class="watchThread" href="#">['+_('Watch Thread')+']</a>');
+	$('.op>.intro').append('<a class="watchThread" href="#">['+_('Marcar Thread')+']</a>');
 
 	//Draw the watchlist, hidden.
 	watchlist.render();

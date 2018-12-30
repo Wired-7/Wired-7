@@ -38,6 +38,16 @@ function makeIcon(mode){
 	$("link[rel='shortcut icon']").attr("href", configRoot+"static/favicon"+(mode?"-"+mode:"")+".ico");
 }
 
+function colorUpdater(){
+	//Ahorramos una variable global..
+	$('#updater a').css('color', 'lime');
+	$('#updater a').attr('class', 'fa fa-refresh fa-spin');
+	setTimeout(function() {
+		$('#updater a').css('color', '');
+	    $('#updater a').attr('class', 'fa fa-refresh');
+	}, 2000);
+}
+
 +function(){
 var notify = false;
 auto_reload_enabled = true; // for watch.js to interop
@@ -54,7 +64,7 @@ $(document).ready(function(){
 
 	// Adds Options panel item
 	if (typeof localStorage.auto_thread_update === 'undefined') {
-		localStorage.auto_thread_update = 'true'; //default value
+		localStorage.auto_thread_update = 'false'; //default value
 	}
 	if (window.Options && Options.get_tab('general')) {
 		Options.extend_tab("general", "<fieldset id='auto-update-fs'><legend>"+_("Auto update")+"</legend>"
@@ -112,8 +122,11 @@ $(document).ready(function(){
 	var countdown_interval;
 
 	// Add an update link
-	$(".threadlinks span:last-child").append("<span id='updater'><a href='#' id='update_thread'>["+_("Update")+"]</a> (<input type='checkbox' id='auto_update_status'> "+_("Auto")+") <span id='update_secs'></span></span>");
-
+	if (active_page == 'thread') {
+	$('.bar.top').append('<span id="updater" style="margin-right: 10px;float: right;"><a class="fa fa-refresh" title="Actualizar respuestas" href="javascript:void(0)" id="update_thread" onclick="colorUpdater()"></a></span>');
+	$(".threadlinks").append("<span id='updater'>(<input type='checkbox' id='auto_update_status'> "+_("Auto")+") <span id='update_secs'></span></span>");
+    }
+ 
 	// Set the updater checkbox according to user setting
 	if (localStorage.auto_thread_update === 'true') {
 		$('#auto_update_status').prop('checked', true);

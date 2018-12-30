@@ -14,7 +14,7 @@
  *
  */
 
-onready(function(){
+$(document).on('ready', function(){
 	var stylesDiv = $('div.styles');
 	var pages = $('div.pages');
 	var stylesSelect = $('<select></select>');
@@ -34,12 +34,24 @@ onready(function(){
 	stylesSelect.change(function() {
 		$('#style-select-' + $(this).val()).click();
 	});
-	
-	stylesDiv.hide()	
+	stylesDiv.hide();
+
+	/*
+	stylesDiv.after(
+		$('<div id="style-select"></div>').append(stylesSelect)
+	);
 	pages.after(
 		$('<div id="style-select"></div>')
-			/*.text(_('Style: '))*/
+			/*.text(_('Style: '))
 			.append(stylesSelect)
 	);
+	*/
+	if (window.Options && Options.get_tab('general')) {
+		Options.extend_tab("general", 
+		"<fieldset><legend>Estilo</legend>"
+		+ ("<div id='style-select'></div>")
+		+ "</fieldset>");
+		$('#style-select').append(stylesSelect);
+	}
 });
 

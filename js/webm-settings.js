@@ -51,9 +51,9 @@ else {
 
 settingsMenu.innerHTML = prefix
     + '<div style="'+style+'">'
-    + '<label><input type="checkbox" name="videoexpand">'+_('Expand videos inline')+'</label><br>'
-    + '<label><input type="checkbox" name="videohover">'+_('Play videos on hover')+'</label><br>'
-    + '<label><input type="range" name="videovolume" min="0" max="1" step="0.01" style="width: 4em; height: 1ex; vertical-align: middle; margin: 0px;">'+_('Default volume')+'</label><br>'
+    + '<label><input type="checkbox" name="videoexpand">'+_('Expandir video')+'</label><br>'
+    + '<label><input type="checkbox" name="videohover">'+_('Reproducir al pasar cursor por encima')+'</label><br>'
+    + '<label><input type="range" name="videovolume" min="0" max="1" value="0.5" step="0.01" style="width: 4em; height: 1ex; vertical-align: middle; margin: 6px;">'+_('Volumen por defecto')+'</label><br>'
     + suffix;
 
 function refreshSettings() {
