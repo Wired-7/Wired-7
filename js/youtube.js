@@ -42,7 +42,7 @@ onready(function(){
 		
 	$('.video-container').each(function(){
 	var videoID = $(this).data('video');
-	$.getJSON('https://www.googleapis.com/youtube/v3/videos?id=' + videoID + '&key=AIzaSyC3A4aW3a_SvlGtnnxn33JoifuFZ1kW_to&part=snippet', function (data) {
+	$.getJSON('https://www.googleapis.com/youtube/v3/videos?id=' + videoID + '&key= [Introduce tu key] &part=snippet', function (data) {
 		$('.video-container[data-video=' + videoID + ']').append("<span style='color: mediumturquoise;font-size: 14px;'><i class='fa fa-play-circle'></i>" + data.items[0].snippet.title + "</span>");
 	});
 });
