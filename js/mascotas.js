@@ -8,8 +8,6 @@
  * Usage:
  *   $config['additional_javascript'][] = 'js/jquery.min.js';
  *   $config['additional_javascript'][] = 'js/options.js';
- *
- * Note: http and https don't have same localStorage so users have different mascots on http and https
  */
 
 	//Estilo
@@ -36,7 +34,7 @@
 				width: auto;\
 				opacity: .5;\
 				transition: opacity .3s ease-out 0s;\
-				pointer-events: auto !important;\
+				pointer-events: none !important;\
 				z-index: -1;\
 			}\
 			</style>').appendTo($('head'));
@@ -73,29 +71,41 @@
 		new claseMascota("Saber","https://i.imgur.com/H7GtZ9j.png"),
 		new claseMascota("Sakamoto-san","https://i.imgur.com/KeJysAb.png"),
 		new claseMascota("Touwa Erio","https://i.imgur.com/AFINQjc.png"),
+		new claseMascota("Wired-chan","https://www.wired-7.org/img/mascota/small_wired.png"),
 		new claseMascota("Yoko Littner","https://i.imgur.com/bEPA1rz.png")
 	];
 
 	var mascotasPrint = "";
-	for (var i = 0,l = arrayMascotas.length; i < l; i++){
-		mascotasPrint += '<div class="seleccionadorMascota"><img src="' + arrayMascotas[i].src +'" onclick="addmascot(this)"><br><p>'+ arrayMascotas[i].nombre +'</p></div>';
+	var totalMascotas = arrayMascotas.length;
+	//data-src will be converted into src when open. Lazy-load.
+	for (var i = 0; i < totalMascotas; i++){
+		mascotasPrint += '<div class="seleccionadorMascota"><img src="' + arrayMascotas[i].src +'" alt="' + arrayMascotas[i].nombre + '" onclick="addmascot(this)"><br><p>'+ arrayMascotas[i].nombre +'</p></div>';
+	}
+	
+	if(localStorage.getItem('arrayMascotasGuardadas') != null){
+		var arrayMascotasGuardadas = JSON.parse(localStorage.getItem('arrayMascotasGuardadas'));
+		var totalMascotasGuardadas = arrayMascotasGuardadas.length;
+		for (var i = 0; i < totalMascotasGuardadas; i++){
+			mascotasPrint += '<div class="seleccionadorMascota"><img src="' + arrayMascotasGuardadas[i].src +'" alt="' + arrayMascotasGuardadas[i].nombre + '" onclick="addmascot(this)"><br><p>'+ arrayMascotasGuardadas[i].nombre +'</p></div>';
+		}
 	}
 	
 	//Comprobaciones de datos
 	window.onload = function(){
 		var URLMascota = localStorage.getItem('URLMascota'); // or localStorage.value
-
+		var NameMascota = localStorage.getItem('NameMascota');
+		
 		var alturaMascota = localStorage.getItem('alturaMascota');
-		if(alturaMascota == null)
+		if(alturaMascota == null || alturaMascota == "")
 			alturaMascota = 40;
 		document.getElementById("inputalturaMascota").value = alturaMascota;
 		
 		//Si la mascota existe, la iniciamos
 		if(URLMascota != null && URLMascota != "") initmascot(URLMascota,alturaMascota);
-		// Iniciar el menu
-		$('.fa.fa-paw').parent().on('click',initmenu(URLMascota,alturaMascota));
+		// Iniciar el menu. Lazy-Load for images.
+		$('.fa.fa-paw').parent().click((function() {initmenu(URLMascota,NameMascota,alturaMascota)}));
 	}
-
+	
 	// Create settings menu
 	var settingsMenu = document.createElement("div");
 	var prefix = "", suffix = "";
@@ -104,55 +114,101 @@
 	  $(settingsMenu).appendTo(tab.content);
 	}
 	
-	
-	
 	settingsMenu.innerHTML = prefix
 		+ '<div id="divMascotas"><br><br>'
-		+ '<div style="white-space: nowrap;float: left;margin-top: 15px;"><label>'+_('Mascota personalizada: URL a la imagen -> ')+'<input type="text" name="mascotaURL" id="mascotaURL"></label><br>'
-		+ '<input type="button" value="¡Añadir!" onclick="addmascot(undefined)">'
+		+ '<div style="white-space: nowrap;float: left;margin-top: 15px;"><label>Añade una mascota personalizada:<br> Nombre de la Mascota -> <input type="text" name="mascotaName" id="mascotaName"><br> URL a la imagen -> <input type="text" name="mascotaURL" id="mascotaURL"></label><br>'
+		+ '<input type="button" value="¡Añadir!" onclick="addcustommascot()">'
 		+ '<input type="button" value="Eliminar" onclick="delmascot()"><br><br>'
 		+ '<label>'+_('Cambia el tamaño de la mascota (1 - 100) -> ')+'<input type="text" name="inputalturaMascota" id="inputalturaMascota"></label><br>'
 		+ '<input type="button" value="¡Cambiar tamaño!" value="40" onclick="cambiaraltura()"><br><br>'
 		+ ''+_('Versión Beta (Si encuentras algun bug nos harías un favor reportandolo en <a href="https://wired-7.org/meta/index">/meta/</a> o github)<br>')
 		+ ''+_('Mascotas de <a href="https://wired-7.org/">Wired-7</a>')+'</div>' //Copyright
 		+ suffix;
-	
+		
 	//Core
 	function initmascot(srcmascota,alturaMascota){
 		$('body').append('<img id="mascot" src="'+ srcmascota +'"style="height: ' + alturaMascota + 'vh;">');
 	}
-
-	function initmenu(srcmascota,alturaMascota){
+	
+	function initmenu(srcmascota,mascotaname,alturaMascota){
 		if ($("#divMascotas .seleccionadorMascota").length == 0) $('#divMascotas').prepend(mascotasPrint);
 		if ($("img[src$='"+ srcmascota + "']").length > 0) $(".seleccionadorMascota img[src$='"+ srcmascota + "']").css("background-image", "radial-gradient(ellipse 50% 50%,#990044, rgb(0,0,0,0))");
 		if (srcmascota != null && srcmascota != "") document.getElementById("mascotaURL").value = srcmascota;
+		if (mascotaname != null && mascotaname != "") document.getElementById("mascotaName").value = mascotaname;
+		
 		document.getElementById("inputalturaMascota").value = alturaMascota;
 	}
 	
 	function addmascot(imagen) {
-			var alturaMascota = localStorage.getItem('alturaMascota');
-			var valmascotaURL = $('#mascotaURL').val();
-			if (imagen==undefined){ 
-				//Si metes URC custom y existe mascota por defecto, borramos el fondo de seleccion
-				if ($('#mascot').attr('src') != undefined) $(".seleccionadorMascota img[src$='"+ $('#mascot').attr('src') + "']").css("background","initial");
-				var srcmascota = valmascotaURL;
-			}else{
-				//Si ha sido seleccionada de las default, eliminamos el background a la anterior imagen (si existe)
-				if ($("img[src$='"+ valmascotaURL + "']").length > 0) $(".seleccionadorMascota img[src$='"+ valmascotaURL + "']").css("background","initial");
-				var srcmascota = imagen.src;
-				document.getElementById("mascotaURL").value = imagen.src;
-				$(imagen).css("background-image", "radial-gradient(ellipse 50% 50%,#990044, rgb(0,0,0,0))");
-			}
-			$('#mascot').remove();
-			$('body').append('<img id="mascot" src="'+ srcmascota +'"style="height: ' + alturaMascota + 'vh;">');
-			localStorage.setItem('URLMascota', srcmascota);
+		var alturaMascota = localStorage.getItem('alturaMascota');
+		var valmascotaURL = $('#mascotaURL').val();
+		
+		//Si ha sido seleccionada de las default, eliminamos el background a la anterior imagen (si existe)
+		if ($("img[src$='"+ valmascotaURL + "']").length > 0) $(".seleccionadorMascota img[src$='"+ valmascotaURL + "']").css("background","initial");
+		var srcmascota = imagen.src;
+		
+		document.getElementById("mascotaURL").value = imagen.src;
+		document.getElementById("mascotaName").value = imagen.alt;
+		
+		$(imagen).css("background-image", "radial-gradient(ellipse 50% 50%,#990044, rgb(0,0,0,0))");
+		
+		$('#mascot').remove();
+		$('body').append('<img id="mascot" src="'+ srcmascota +'"style="height: ' + alturaMascota + 'vh;">');
+		localStorage.setItem('URLMascota', srcmascota);
+		localStorage.setItem('NameMascota', imagen.alt);
 	}
 	
 	function delmascot(){
-		if ($('#mascot').attr('src') != undefined) $(".seleccionadorMascota img[src$='"+ $('#mascot').attr('src') + "']").css("background","initial");
+		//if ($('#mascot').attr('src') != undefined) $(".seleccionadorMascota img[src$='"+ $('#mascot').attr('src') + "']").css("background","initial");
+		$(".seleccionadorMascota img[src$='"+ $('#mascot').attr('src') + "']").closest('div').remove() //Borra cualquier cosa!!
 		$('#mascot').remove();
+		var valmascotaURL = $('#mascotaURL').val();
 		document.getElementById("mascotaURL").value = null;
-		localStorage.setItem('URLMascota', null);
+		document.getElementById("mascotaName").value = null;
+		
+		localStorage.setItem('URLMascota', "");
+		localStorage.setItem('NameMascota', "");
+		
+		if(arrayMascotasGuardadas != null){
+			var arrayMascotasGuardadasActual = JSON.parse(localStorage.getItem('arrayMascotasGuardadas'));
+		}else var arrayMascotasGuardadasActual = [];
+		
+		for(var i=0; i<arrayMascotasGuardadasActual.length; i++){
+			if(valmascotaURL == arrayMascotasGuardadasActual[i].src){
+				arrayMascotasGuardadasActual.splice(i, 1);
+				break;
+			}
+		}
+		localStorage.setItem('arrayMascotasGuardadas', JSON.stringify(arrayMascotasGuardadasActual));
+	}
+	
+	function addcustommascot() {
+		var alturaMascota = localStorage.getItem('alturaMascota');
+		var valmascotaURL = $('#mascotaURL').val();
+		var valmascotaName = $('#mascotaName').val();
+		
+		if(valmascotaURL == "" || valmascotaName == ""){
+			alert("Los campos de nombre y URL a la mascota no pueden estar vacios");
+			return;
+		}
+		//Si metes URL custom y existe mascota por defecto, borramos el fondo de seleccion
+		if ($('#mascot').attr('src') != undefined) $(".seleccionadorMascota img[src$='"+ $('#mascot').attr('src') + "']").css("background","initial");
+			
+		//Añadimos la falsa mascota para actualizar lista
+		$('.seleccionadorMascota').last().after('<div class="seleccionadorMascota"><img src="' + valmascotaURL + '" alt="' + valmascotaName + '" onclick="addmascot(this)"><br><p>' + valmascotaName + '</p></div>');
+			
+		//Metemos la mascota custom
+		if(arrayMascotasGuardadas != null){
+			var arrayMascotasGuardadasActual = JSON.parse(localStorage.getItem('arrayMascotasGuardadas'));
+		}else var arrayMascotasGuardadasActual = [];
+			
+		arrayMascotasGuardadasActual.push(new claseMascota(valmascotaName, valmascotaURL));
+		localStorage.setItem('arrayMascotasGuardadas', JSON.stringify(arrayMascotasGuardadasActual));
+
+		$('#mascot').remove();
+		$('body').append('<img id="mascot" src="'+ valmascotaURL +'"style="height: ' + alturaMascota + 'vh;">');
+		localStorage.setItem('URLMascota', valmascotaURL);
+		localStorage.setItem('NameMascota', valmascotaName);
 	}
 	
 	function cambiaraltura(){
